@@ -1,0 +1,28 @@
+jwt:
+  secretKey: "Dw73uKfV0Il1UHJWywMsu5Hv1bsbXdHrKFhO3X7mLQXKNTWDsaU87iI7SKUtM7kQ"
+
+spring:
+  mail:
+    username: "gupo941020@naver.com"
+    password: "Fuck941020!"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/daeho
+    username: root
+    password: 12341234
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+holiday:
+  url: https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo
+  serviceKey: EVKPp2vNpYX8RKCRWjeD8veZLsDCdFApaNLrRRUTi%2Fsx6i%2B%2FaAkdALla9Yk7s%2F0uDQ8%2Bsy%2FipzeDMaOmEiP0WA%3D%3D

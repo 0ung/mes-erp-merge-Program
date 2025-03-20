@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 설정 부분 -->
+
+    <!-- 캐시 사용 여부 -->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
+
+    <!-- Type Alias 설정 -->
+    <typeAliases>
+        <typeAlias alias="stockWHAmtList" type="codehows.com.daehoint.entity.erp.VLGWHStockWHAmtList"/>
+        <typeAlias alias="amtListDay" type="codehows.com.daehoint.entity.erp.VPUORDAmtList"/>
+        <typeAlias alias="stockAmtList" type="codehows.com.daehoint.entity.erp.VLGWHStockAmtList"/>
+        <typeAlias alias="partsList" type="codehows.com.daehoint.entity.erp.VPDPartsList"/>
+        <typeAlias alias="workReportQC" type="codehows.com.daehoint.entity.erp.VPDSPFWorkReportQC"/>
+
+        <typeAlias alias="materialPurchasePlan" type="codehows.com.daehoint.entity.mes.MaterialPurchasePlanMonthly"/>
+        <typeAlias alias="dailyWorkLoss" type="codehows.com.daehoint.entity.mes.DailyWorkLoss"/>
+        <typeAlias alias="lotResultList" type="codehows.com.daehoint.entity.mes.LotResultList"/>
+        <typeAlias alias="productionDailyList" type="codehows.com.daehoint.entity.mes.ProductionDailyList"/>
+        <typeAlias alias="workerRetention" type="codehows.com.daehoint.entity.mes.WorkerRetention"/>
+    </typeAliases>
+    <!-- Mapper 파일 위치 -->
+    <mappers>
+    </mappers>
+</configuration>

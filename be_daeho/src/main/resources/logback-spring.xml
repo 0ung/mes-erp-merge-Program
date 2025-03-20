@@ -1,0 +1,40 @@
+<configuration>
+
+    <!-- 콘솔 출력 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일 출력 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 로그 레벨 필터 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+
+        <!-- RollingPolicy 설정 (매일 하나의 파일 생성) -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 파일을 매일 생성하도록 설정. %d{yyyy-MM-dd}는 날짜별 파일명 패턴 -->
+            <FileNamePattern>/home/logs/mergeERPMES-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 보존할 파일 개수 설정 (예: 30일분 로그만 유지) -->
+            <maxHistory>30</maxHistory>
+            <!-- 로그 파일 크기가 일정 크기를 초과하면 새 파일로 롤링하도록 설정 -->
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
+        <!-- 로그 포맷 설정 -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- 루트 로깅 설정 (ERROR만 로깅) -->
+    <logger name="ROOT" level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+</configuration>

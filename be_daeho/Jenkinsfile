@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    environment {
+        timestamp = "${System.currentTimeMillis() / 1000L}"
+        SSH_CREDENTIALS_ID = '2077913d-8cde-4c20-b918-625d6833d9ef'
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    def oldImageId = sh(script: "docker images be_daeho:latest -q", returnStdout: true).trim()
+                    env.oldImageId = oldImageId
+                }
+
+                git branch: 'main',
+                url: 'git@github.com:0ung/be_daeho.git',
+                credentialsId: "${SSH_CREDENTIALS_ID}"
+            }
+
+            post {
+                success {
+                    sh 'echo "Successfully Cloned Repository"'
+                }
+                failure {
+                    sh 'echo "Failed to Clone Repository"'
+                }
+            }
+        }
+
+        stage('Build with Gradle') {
+            steps {
+                script {
+                    sh 'chmod +x gradlew'
+                    sh './gradlew clean build --info'
+                }
+            }
+
+            post {
+                success {
+                    sh 'echo "Gradle Build Successful"'
+                }
+                failure {
+                    sh 'echo "Gradle Build Failed"'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build --no-cache -t be_daeho:${timestamp} ."
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    def isRunning = sh(script: "docker ps -q -f name=be_daeho", returnStdout: true).trim()
+
+                    if (isRunning) {
+                        sh "docker rm -f be_daeho"
+                    }
+
+                    try {
+                        sh """
+                        docker run \
+                          --name=be_daeho \
+                          -v /docker_projects/be_daeho/volumes/gen:/gen \
+                          --restart unless-stopped \
+                          --network ubuntu_default \
+                          -e TZ=Asia/Seoul \
+                          -d \
+                          be_daeho:${timestamp}
+                        """
+                    } catch (Exception e) {
+                        def imageExists = sh(script: "docker images -q be_daeho:${timestamp}", returnStdout: true).trim()
+
+                        if (imageExists) {
+                            sh "docker rmi be_daeho:${timestamp}"
+                        }
+
+                        error("Failed to run the Docker container.")
+                    }
+
+                    def latestExists = sh(script: "docker images -q be_daeho:latest", returnStdout: true).trim()
+
+                    if (latestExists) {
+                        sh "docker rmi be_daeho:latest"
+                    }
+
+                    if(!env.oldImageId.isEmpty()) {
+                        sh "docker rmi ${env.oldImageId}"
+                    }
+
+                    sh "docker tag be_daeho:${env.timestamp} be_daeho:latest"
+                }
+            }
+        }
+    }
+}
